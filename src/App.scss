@@ -1,0 +1,150 @@
+.game-container {
+  width: 100vw;
+  height: 100vh;
+  background: #111;
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+}
+
+.level {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.player {
+  width: 40px;
+  height: 40px;
+  background: #5b6ee1;
+  position: absolute;
+  border-radius: 5px;
+  transition: transform 0.05s linear;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 6px;
+    background: #999;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 3px;
+  }
+}
+
+.reticle {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  pointer-events: none;
+  transform-origin: center;
+  
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    background: #f55;
+  }
+  
+  &::before {
+    width: 20px;
+    height: 2px;
+    top: 9px;
+  }
+  
+  &::after {
+    width: 2px;
+    height: 20px;
+    left: 9px;
+  }
+}
+
+.projectile {
+  width: 10px;
+  height: 4px;
+  background: #ff5;
+  position: absolute;
+  border-radius: 2px;
+  transform-origin: center;
+}
+
+.platform {
+  position: absolute;
+  background: #444;
+  height: 20px;
+  
+  &.platform-ground {
+    width: 100vw;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  &.platform-1 {
+    width: 20vw;
+    bottom: 20vh;
+    left: 5vw;
+  }
+  
+  &.platform-2 {
+    width: 30vw;
+    bottom: 45vh;
+    right: 10vw;
+  }
+  
+  &.platform-3 {
+    width: 15vw;
+    bottom: 70vh;
+    left: 30vw;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.enemy {
+  width: 30px;
+  height: 30px;
+  background: #f55;
+  position: absolute;
+  border-radius: 50%;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #000;
+    border-radius: 50%;
+    top: 8px;
+    left: 8px;
+    box-shadow: 8px 0 0 #000;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 2px;
+    background: #000;
+    bottom: 8px;
+    left: 9px;
+  }
+}
+
+.scene-name {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  color: #fff;
+  font-family: monospace;
+  font-size: 16px;
+  opacity: 0.7;
+  z-index: 1000;
+}
