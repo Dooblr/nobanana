@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from 'react'
 import { Vector3 } from 'three'
 import './App.scss'
 import * as THREE from 'three'
+import { PROJECTILE_RADIUS } from './constants'; // Adjust the path as necessary
 
 type Projectile = {
   id: number
@@ -62,13 +63,13 @@ const wallTexture = new THREE.TextureLoader().load('/grid.png')
 wallTexture.wrapS = wallTexture.wrapT = THREE.RepeatWrapping
 wallTexture.repeat.set(4, 2)
 
-function ProjectileObject({ position, direction }: { position: Vector3, direction: Vector3 }) {
+function ProjectileObject({ position, direction, velocity, radius, onHit, enemies }: { position: Vector3, direction: Vector3, velocity: number, radius: number, onHit: (position: Vector3) => void, enemies: Enemy[] }) {
   const meshRef = useRef<THREE.Mesh>(null)
   
   useFrame((_, delta) => {
     if (!meshRef.current) return
     meshRef.current.position.add(
-      direction.clone().multiplyScalar(PROJECTILE_SPEED * delta)
+      direction.clone().multiplyScalar(velocity * delta)
     )
   })
 
@@ -541,6 +542,26 @@ function App() {
     return () => cancelAnimationFrame(animationFrame)
   }, [])
 
+  const handleProjectileHit = (position: Vector3) => {
+    console.log('Projectile hit at position:', position); // Log the hit position
+
+    // Create explosion effect or any other logic
+    createExplosion(position); // Optional explosion effect
+
+    // Update enemies state
+    setEnemies(prev => prev.map(enemy => {
+      const distance = enemy.position.distanceTo(position);
+      if (distance < ENEMY_SIZE) {
+        // Update last hit time for flashing
+        return { ...enemy, lastHitTime: performance.now() };
+      }
+      return enemy;
+    }));
+
+    // Optionally remove the projectile
+    setProjectiles(prev => prev.filter(p => p.id !== id)); // Remove projectile
+  };
+
   return (
     <div className="game-container">
       <Canvas 
@@ -579,6 +600,10 @@ function App() {
             key={projectile.id}
             position={projectile.position}
             direction={projectile.direction}
+            velocity={PROJECTILE_SPEED}
+            radius={PROJECTILE_RADIUS}
+            onHit={handleProjectileHit}
+            enemies={enemies}
           />
         ))}
 
